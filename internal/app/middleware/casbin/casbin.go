@@ -66,6 +66,12 @@ func (cs *CasbinService) InitAdmin() error {
 		fmt.Println("超级管理员权限已经存在")
 		return nil
 	}
+
+	userId := "1"
+	_, err_role := cs.AddRoleForUser(userId, "super_admin")
+	if err_role != nil {
+		return err_role
+	}
 	// p, super_admin, *, * 代表超级管理员可以访问所有资源并执行所有操作
 	_, cs_err := cs.AddPolicy("super_admin", "*", "*")
 	if cs_err != nil {
