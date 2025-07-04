@@ -28,10 +28,8 @@ func (m *MenuService) Tree() ([]model.Menu, error) {
 	return tree, nil
 }
 
-// 菜单权限树
-
 // 递归构建树 // 指针允许null
-func buildTreeMenu(menus []model.Menu, parentId *uint64) []model.Menu {
+func buildTreeMenu(menus []model.Menu, parentId *int) []model.Menu {
 	var tree []model.Menu
 	for _, m := range menus {
 		if (m.ParentId == nil && parentId == nil) || (m.ParentId != nil && parentId != nil && *m.ParentId == *parentId) {

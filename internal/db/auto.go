@@ -47,6 +47,7 @@ func AutoMigrate(db *gorm.DB) {
 			fmt.Println("创建超级管理员失败，请手动创建")
 		}
 		db.Model(&admin).Association("Roles").Append(&role)
+
 	}
 
 }

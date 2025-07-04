@@ -1,6 +1,7 @@
 package casbin
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
@@ -50,6 +51,27 @@ func InitCasbin(db *gorm.DB) *CasbinService {
 	})
 
 	return casbinService
+}
+
+// 初始化admin 角色权限
+func (cs *CasbinService) InitAdmin() error {
+	// 检查是否已存在策略 p, super_admin, *, *
+	exists, err := cs.Enforcer.HasPolicy("super_admin", "*", "*")
+	if err != nil {
+		return fmt.Errorf("检查策略时出错: %v", err)
+	}
+
+	// 如果该策略已经存在，返回不需要添加
+	if exists {
+		fmt.Println("超级管理员权限已经存在")
+		return nil
+	}
+	// p, super_admin, *, * 代表超级管理员可以访问所有资源并执行所有操作
+	_, cs_err := cs.AddPolicy("super_admin", "*", "*")
+	if cs_err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetEnforcer 获取Enforcer实例

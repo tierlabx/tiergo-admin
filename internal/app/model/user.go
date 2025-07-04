@@ -28,6 +28,6 @@ type UserReq struct {
 
 // UserRole 用户角色关联表
 type UserRole struct {
-	UserID uint `gorm:"primaryKey"`
-	RoleID uint `gorm:"primaryKey"`
+	UserID int `gorm:"primaryKey"`
+	RoleID int `gorm:"primaryKey"`
 }

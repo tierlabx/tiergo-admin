@@ -20,6 +20,6 @@ type RoleReq struct {
 
 // RoleMenu 角色菜单关联表
 type RoleMenu struct {
-	RoleId  uint `gorm:"primaryKey"`
-	MenuIds uint
+	RoleId  int `gorm:"primaryKey"`
+	MenuIds int
 }

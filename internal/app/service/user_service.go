@@ -147,6 +147,7 @@ func (s *UserService) Page(req model.PageLimitReq) (*model.PageResult[model.User
 	}, nil
 }
 
+// 更新用户
 func (s *UserService) UpdateFromDTO(id uint64, req *model.UserReq) error {
 	// 查询原始数据（为了不覆盖空字段）
 	var user model.User
@@ -258,4 +259,14 @@ func (s *UserService) RemoveRoleFromUser(userID, roleID uint64) error {
 	cs := casbin.GetInstance()
 	_, err := cs.DeleteRoleForUser(strconv.Itoa(int(userID)), role.Name)
 	return err
+}
+
+// 获取用户所有角色
+// @Params 用户ID
+func (s *UserService) GetUserRole(id uint64) ([]model.Role, error) {
+	var roles []model.Role
+	if err := s.DB.Model(&model.User{}).Where("id = ?", id).Preload("Role").Find(&roles).Error; err != nil {
+		return nil, err
+	}
+	return roles, nil
 }

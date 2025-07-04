@@ -54,3 +54,8 @@ func (s *RoleService) GetPermissions(roleName string) ([][]string, error) {
 	cs := casbin.GetInstance()
 	return cs.GetEnforcer().GetFilteredPolicy(0, roleName)
 }
+
+// 角色菜单权限
+func (m *MenuService) GetPermissionMenuTree() {
+
+}

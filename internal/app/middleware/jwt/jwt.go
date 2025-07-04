@@ -24,7 +24,7 @@ var defaultConfig = JWTConfig{
 
 // CustomClaims 自定义JWT声明
 type CustomClaims struct {
-	UserID   uint64 `json:"user_id"`
+	UserID   int    `json:"user_id"`
 	Username string `json:"username"`
 	jwt.RegisteredClaims
 }
@@ -40,7 +40,7 @@ func NewJWTService() *JWTService {
 }
 
 // GenerateToken 生成JWT令牌
-func (s *JWTService) GenerateToken(userID uint64, username string) (string, error) {
+func (s *JWTService) GenerateToken(userID int, username string) (string, error) {
 	// 创建自定义声明
 	claims := &CustomClaims{
 		UserID:   userID,

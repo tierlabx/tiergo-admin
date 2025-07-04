@@ -39,7 +39,8 @@ func main() {
 	defer sqlDB.Close()
 
 	// 3. 初始化Casbin
-	casbin.InitCasbin(gormDB)
+	cs := casbin.InitCasbin(gormDB)
+	cs.InitAdmin()
 
 	// 4.依赖注入
 	container := di.BuildContainer(gormDB)
