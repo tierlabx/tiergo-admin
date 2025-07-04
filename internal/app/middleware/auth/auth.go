@@ -42,6 +42,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		hasPermission := false
 		for _, role := range roles {
 			ok, err := cs.Enforce(role, obj, act)
+			fmt.Printf("检查 %v， 角色 %v , 路径%v , 操作 %v", ok, role, obj, act)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "权限检查失败"})
 				c.Abort()
