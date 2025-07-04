@@ -1,0 +1,835 @@
+basePath: /api/v1
+definitions:
+  controller.PasswordRequest:
+    properties:
+      new_password:
+        maxLength: 100
+        minLength: 6
+        type: string
+      old_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
+  controller.RoleRequest:
+    properties:
+      role_id:
+        type: integer
+    required:
+    - role_id
+    type: object
+  crud.MenuResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.Menu'
+      message:
+        type: string
+    type: object
+  crud.RolePageResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        properties:
+          data:
+            items:
+              $ref: '#/definitions/model.Role'
+            type: array
+          limit:
+            type: integer
+          page:
+            type: integer
+          total:
+            type: integer
+        type: object
+      message:
+        type: string
+    type: object
+  crud.RoleResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.Role'
+      message:
+        type: string
+    type: object
+  crud.UserResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.User'
+      message:
+        type: string
+    type: object
+  model.Menu:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/model.Menu'
+        type: array
+      code:
+        type: string
+      component:
+        type: string
+      created_at:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      note:
+        type: string
+      parent_id:
+        description: 允许为空的父ID
+        type: integer
+      path:
+        type: string
+      sort:
+        type: integer
+      status:
+        type: integer
+      type:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  model.MenuReq:
+    properties:
+      code:
+        type: string
+      component:
+        type: string
+      icon:
+        type: string
+      name:
+        type: string
+      note:
+        type: string
+      parent_id:
+        type: integer
+      path:
+        type: string
+      sort:
+        type: integer
+      status:
+        type: integer
+      type:
+        type: integer
+    required:
+    - path
+    - type
+    type: object
+  model.PageResult-model_User:
+    properties:
+      limit:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  model.Role:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      display_name:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.RoleReq:
+    properties:
+      description:
+        type: string
+      display_name:
+        type: string
+      name:
+        type: string
+    type: object
+  model.User:
+    properties:
+      avatar:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      nickname:
+        type: string
+      phone:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/model.Role'
+        type: array
+      status:
+        description: 1:正常, 0:禁用
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  model.UserReq:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        description: 密码不在JSON中返回
+        type: string
+      phone:
+        type: string
+      status:
+        type: integer
+      username:
+        type: string
+    type: object
+  service.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  service.PermissionRequest:
+    properties:
+      method:
+        type: string
+      path:
+        type: string
+      role:
+        type: string
+    required:
+    - method
+    - path
+    - role
+    type: object
+  service.RegisterRequest:
+    properties:
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+      phone:
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+host: localhost:88
+info:
+  contact: {}
+  description: Tier Up项目的API服务
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Tier Up API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录获取令牌
+      parameters:
+      - description: 用户登录信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/service.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功，返回token
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 登录失败
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 用户登录
+      tags:
+      - User
+  /menu/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建 Menu
+      parameters:
+      - description: Menu 数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.MenuReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.MenuResponse'
+      summary: 创建 Menu
+      tags:
+      - Menu
+  /menu/delete/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除 Menu
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.MenuResponse'
+      summary: 删除 Menu
+      tags:
+      - Menu
+  /menu/tree:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 菜单详情
+          schema:
+            items:
+              $ref: '#/definitions/model.Menu'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 获取菜单树
+      tags:
+      - Menu
+  /menu/update/:id:
+    put:
+      consumes:
+      - application/json
+      description: 更新 Menu
+      parameters:
+      - description: Menu 数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.MenuReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.MenuResponse'
+      summary: 更新 Menu
+      tags:
+      - Menu
+  /permission:
+    delete:
+      consumes:
+      - application/json
+      description: 移除角色的访问路径权限
+      parameters:
+      - description: 权限信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/service.PermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 移除成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 移除权限失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 移除权限
+      tags:
+      - 权限管理
+    post:
+      consumes:
+      - application/json
+      description: 为角色添加访问路径的权限
+      parameters:
+      - description: 权限信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/service.PermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 添加成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 添加权限失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 添加权限
+      tags:
+      - 权限管理
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: 注册新用户
+      parameters:
+      - description: 用户注册信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/service.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 注册失败
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 用户注册
+      tags:
+      - User
+  /role-permissions/{name}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定角色的所有权限
+      parameters:
+      - description: 角色名称
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 权限列表
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 角色名称不能为空
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 获取角色权限失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 获取角色权限
+      tags:
+      - 权限管理
+  /role/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 根据ID获取角色详情
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 角色详情
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 无效的角色ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 获取角色失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 获取角色详情
+      tags:
+      - Role
+  /role/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建 Role
+      parameters:
+      - description: Role 数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.RoleResponse'
+      summary: 创建 Role
+      tags:
+      - Role
+  /role/delete/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除 Role
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.RoleResponse'
+      summary: 删除 Role
+      tags:
+      - Role
+  /role/page:
+    get:
+      consumes:
+      - application/json
+      description: 分页查询 Role
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.RolePageResponse'
+      summary: 分页查询 Role
+      tags:
+      - Role
+  /role/update/:id:
+    put:
+      consumes:
+      - application/json
+      description: 更新 Role
+      parameters:
+      - description: Role 数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.RoleResponse'
+      summary: 更新 Role
+      tags:
+      - Role
+  /user/{id}/role:
+    delete:
+      consumes:
+      - application/json
+      description: 从指定用户移除角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 角色信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 移除成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 移除角色失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 移除用户的角色
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      description: 为指定用户分配角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 角色信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 分配成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 分配角色失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 分配角色给用户
+      tags:
+      - User
+  /user/delete/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除 User
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/crud.UserResponse'
+      summary: 删除 User
+      tags:
+      - User
+  /user/info:
+    get:
+      consumes:
+      - application/json
+      description: 获取已登录用户的详细信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户信息
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 未认证
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 获取用户信息失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 获取当前用户信息
+      tags:
+      - User
+  /user/page:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 页码
+        in: path
+        name: page
+        required: true
+        type: integer
+      - description: 当页条数
+        in: path
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户分页
+          schema:
+            $ref: '#/definitions/model.PageResult-model_User'
+      security:
+      - BearerAuth: []
+      summary: 分页
+      tags:
+      - User
+  /user/password:
+    put:
+      consumes:
+      - application/json
+      description: 修改当前用户的密码
+      parameters:
+      - description: 密码信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.PasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 未认证
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 修改密码失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 修改密码
+      tags:
+      - User
+  /user/update/:id:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 修改参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新用户
+          schema:
+            $ref: '#/definitions/model.PageResult-model_User'
+      security:
+      - BearerAuth: []
+      summary: 更新用户
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
