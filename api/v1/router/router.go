@@ -29,11 +29,9 @@ func SetupDigRouter(r *gin.Engine, c *dig.Container) error {
 	) {
 		// 设置API路由组
 		api := r.Group("/api/v1")
-
 		api.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 		// 不需要认证的路由
 		{
-			// 用户认证
 			api.POST("/register", userController.Register)
 			api.POST("/login", userController.Login)
 		}
@@ -48,21 +46,19 @@ func SetupDigRouter(r *gin.Engine, c *dig.Container) error {
 			rbacGroup.Use(auth.AuthMiddleware())
 			{
 				// 用户相关
-				crud.RegisterCrudRoutes[model.User, model.UserReq](authGroup, db)
-
-				authGroup.GET("/user/page", userController.Page)
-				authGroup.GET("/user/info", userController.GetUserInfo)
+				crud.RegisterCrudRoutes[model.User, model.UserReq](rbacGroup, db)
+				rbacGroup.GET("/user/page", userController.Page)
+				rbacGroup.GET("/user/info", userController.GetUserInfo)
 				rbacGroup.PUT("/user/password", userController.ChangePassword)
 				rbacGroup.POST("/user/update/:id", userController.Update)
-
 				// 用户角色管理
 				rbacGroup.POST("/user/:id/role", userController.AssignRole)
 				rbacGroup.DELETE("/user/:id/role", userController.RemoveRole)
 
 				// 角色管理
 				crud.RegisterCrudRoutes[model.Role, model.RoleReq](rbacGroup, db)
-
-				// 权限管理
+				rbacGroup.GET("/role/:id", roleController.GetRoleByID)
+				// api权限管理
 				rbacGroup.POST("/permission", roleController.AddPermission)
 				rbacGroup.DELETE("/permission", roleController.RemovePermission)
 				rbacGroup.GET("/role-permissions/:name", roleController.GetPermissions)

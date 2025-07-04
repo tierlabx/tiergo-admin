@@ -48,10 +48,10 @@ func (c *RoleController) GetRoleByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "获取角色成功", "data": role})
 }
 
-// AddPermission 添加权限
+// AddPermission 添加API权限
 // @Summary 添加权限
 // @Description 为角色添加访问路径的权限
-// @Tags 权限管理
+// @Tags API权限管理
 // @Accept json
 // @Produce json
 // @Security BearerAuth
@@ -75,10 +75,10 @@ func (c *RoleController) AddPermission(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "添加权限成功"})
 }
 
-// RemovePermission 移除权限
+// RemovePermission 移除API权限
 // @Summary 移除权限
 // @Description 移除角色的访问路径权限
-// @Tags 权限管理
+// @Tags API权限管理
 // @Accept json
 // @Produce json
 // @Security BearerAuth
@@ -102,10 +102,10 @@ func (c *RoleController) RemovePermission(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "移除权限成功"})
 }
 
-// GetPermissions 获取角色权限
+// GetPermissions 获取角色API权限
 // @Summary 获取角色权限
 // @Description 获取指定角色的所有权限
-// @Tags 权限管理
+// @Tags API权限管理
 // @Accept json
 // @Produce json
 // @Security BearerAuth
