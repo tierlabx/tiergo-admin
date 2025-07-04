@@ -30,7 +30,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		// 使用用户角色作为主体进行权限检查
 		sub := strconv.Itoa(userID.(int))
-		roles, roleErr := cs.GetEnforcer().GetAllRoles()
+		roles, roleErr := cs.GetEnforcer().GetRolesForUser(sub)
 
 		if roleErr != nil || len(roles) == 0 {
 			c.JSON(http.StatusForbidden, gin.H{"code": 403, "message": "用户未分配角色"})
