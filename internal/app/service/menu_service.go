@@ -34,13 +34,13 @@ func (m *MenuService) Tree() ([]model.Menu, error) {
 // 获取用户所有的菜单权限
 func (m *MenuService) GetUserPermissionMenuTree(userId int) ([]model.Menu, error) {
 	// 获取用户的所有角色
-	var roles []model.Role
-	if err := m.DB.Model(&model.User{}).Where("id = ?", userId).Preload("Role").Find(&roles).Error; err != nil {
+	var user model.User
+	if err := m.DB.Preload("Roles").First(&user, userId).Error; err != nil {
 		return nil, err
 	}
 	// 获取所有角色所有的菜单权限
 	var menus []model.Menu
-	for _, role := range roles {
+	for _, role := range user.Roles {
 		permissions, err := m.RoleService.GetRoleMenu(role.ID)
 		if err != nil {
 			return nil, err
