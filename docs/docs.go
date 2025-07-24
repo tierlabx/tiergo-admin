@@ -866,50 +866,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "从指定用户移除角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "移除用户的角色",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "用户ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "角色信息",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controller.RoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "移除成功",
-                        "schema": {
-                            "$ref": "#/definitions/controller.Response-any"
-                        }
-                    }
-                }
             }
         }
     },
@@ -1013,11 +969,14 @@ const docTemplate = `{
         "controller.RoleRequest": {
             "type": "object",
             "required": [
-                "role_id"
+                "role_ids"
             ],
             "properties": {
-                "role_id": {
-                    "type": "integer"
+                "role_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

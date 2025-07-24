@@ -216,49 +216,30 @@ func (s *UserService) ChangePassword(userID uint64, oldPassword, newPassword str
 }
 
 // AssignRoleToUser 给用户分配角色
-func (s *UserService) AssignRoleToUser(userID, roleID uint64) error {
+func (s *UserService) AssignRoleToUser(userID int, roleIDS []int) error {
 	var user model.User
 	if err := s.DB.First(&user, userID).Error; err != nil {
 		return err
 	}
 
-	var role model.Role
-	if err := s.DB.First(&role, roleID).Error; err != nil {
+	var roles []model.Role
+	if err := s.DB.Where("id in ?", roleIDS).Find(&roles).Error; err != nil {
 		return err
 	}
-
-	// 添加角色关联
-	if err := s.DB.Model(&user).Association("Roles").Append(&role); err != nil {
+	if err := s.DB.Model(&user).Association("Roles").Replace(&roles); err != nil {
 		return err
 	}
 
 	// 同时添加Casbin规则
 	cs := casbin.GetInstance()
-	_, err := cs.AddRoleForUser(strconv.FormatUint(userID, 10), role.Name)
-	return err
-}
-
-// RemoveRoleFromUser 从用户移除角色
-func (s *UserService) RemoveRoleFromUser(userID, roleID uint64) error {
-	var user model.User
-	if err := s.DB.First(&user, userID).Error; err != nil {
-		return err
+	for _, role := range roles {
+		_, err := cs.AddRoleForUser(strconv.FormatUint(uint64(userID), 10), role.Name)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 
-	var role model.Role
-	if err := s.DB.First(&role, roleID).Error; err != nil {
-		return err
-	}
-
-	// 移除角色关联
-	if err := s.DB.Model(&user).Association("Roles").Delete(&role); err != nil {
-		return err
-	}
-
-	// 同时移除Casbin规则
-	cs := casbin.GetInstance()
-	_, err := cs.DeleteRoleForUser(strconv.Itoa(int(userID)), role.Name)
-	return err
 }
 
 // 获取用户所有角色

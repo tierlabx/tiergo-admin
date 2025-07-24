@@ -22,7 +22,7 @@ type PasswordRequest struct {
 
 // RoleRequest 角色请求
 type RoleRequest struct {
-	RoleID uint64 `json:"role_id" binding:"required"`
+	RoleIDs []int `json:"role_ids" binding:"required"`
 }
 
 // NewUserController 创建用户控制器
@@ -239,42 +239,10 @@ func (c *UserController) AssignRole(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.UserService.AssignRoleToUser(uint64(userID), req.RoleID); err != nil {
+	if err := c.UserService.AssignRoleToUser(int(userID), req.RoleIDs); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "分配角色失败: " + err.Error(), "data": true})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "分配角色成功", "data": true})
-}
-
-// RemoveRole 移除角色
-// @Summary 移除用户的角色
-// @Description 从指定用户移除角色
-// @Tags User
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param id path int true "用户ID"
-// @Param data body RoleRequest true "角色信息"
-// @Success 200 {object} Response[any] "移除成功"
-// @Router /user/{id}/role [delete]
-func (c *UserController) RemoveRole(ctx *gin.Context) {
-	userID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "无效的用户ID"})
-		return
-	}
-
-	var req RoleRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "参数错误: " + err.Error()})
-		return
-	}
-
-	if err := c.UserService.RemoveRoleFromUser(uint64(userID), req.RoleID); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "移除角色失败: " + err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "移除角色成功"})
 }

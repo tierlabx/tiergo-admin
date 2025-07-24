@@ -53,7 +53,6 @@ func SetupDigRouter(r *gin.Engine, c *dig.Container) error {
 				rbacGroup.POST("/user/update/:id", userController.Update)
 				// 用户角色管理
 				rbacGroup.POST("/user/:id/role", userController.AssignRole)
-				rbacGroup.DELETE("/user/:id/role", userController.RemoveRole)
 
 				// 角色管理
 				crud.RegisterCrudRoutes[model.Role, model.RoleReq](rbacGroup, db)
