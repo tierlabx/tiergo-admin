@@ -185,6 +185,36 @@ const docTemplate = `{
                 }
             }
         },
+        "/menu/user-permission-tree": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "获取用户权限菜单树",
+                "responses": {
+                    "200": {
+                        "description": "用户权限菜单树",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Menu"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/permission": {
             "post": {
                 "security": [
@@ -452,7 +482,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "获取指定角色的菜单",
+                "description": "获取指定角色的菜单ids",
                 "consumes": [
                     "application/json"
                 ],
@@ -462,7 +492,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "获取角色的菜单",
+                "summary": "获取角色的菜单ids",
                 "responses": {
                     "200": {
                         "description": "菜单列表",
