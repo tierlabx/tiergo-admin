@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  controller.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
   controller.PasswordRequest:
     properties:
       new_password:
@@ -11,6 +18,50 @@ definitions:
     required:
     - new_password
     - old_password
+    type: object
+  controller.Response-any:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  controller.Response-controller_LoginResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/controller.LoginResponse'
+      message:
+        type: string
+    type: object
+  controller.Response-model_PageResult-model_User:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.PageResult-model_User'
+      message:
+        type: string
+    type: object
+  controller.Response-model_User:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.User'
+      message:
+        type: string
+    type: object
+  controller.Response-model_UserReq:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.UserReq'
+      message:
+        type: string
     type: object
   controller.RoleRequest:
     properties:
@@ -217,6 +268,18 @@ definitions:
     - password
     - username
     type: object
+  service.PermissionMenuRequest:
+    properties:
+      menu_ids:
+        items:
+          type: integer
+        type: array
+      role_id:
+        type: integer
+    required:
+    - menu_ids
+    - role_id
+    type: object
   service.PermissionRequest:
     properties:
       method:
@@ -265,7 +328,6 @@ paths:
     post:
       consumes:
       - application/json
-      description: 用户登录获取令牌
       parameters:
       - description: 用户登录信息
         in: body
@@ -279,18 +341,15 @@ paths:
         "200":
           description: 登录成功，返回token
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-controller_LoginResponse'
         "400":
           description: 参数错误
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
         "401":
           description: 登录失败
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
       summary: 用户登录
       tags:
       - User
@@ -405,7 +464,7 @@ paths:
       - BearerAuth: []
       summary: 移除权限
       tags:
-      - 权限管理
+      - 角色API权限管理
     post:
       consumes:
       - application/json
@@ -439,12 +498,11 @@ paths:
       - BearerAuth: []
       summary: 添加权限
       tags:
-      - 权限管理
+      - 角色API权限管理
   /register:
     post:
       consumes:
       - application/json
-      description: 注册新用户
       parameters:
       - description: 用户注册信息
         in: body
@@ -458,18 +516,15 @@ paths:
         "200":
           description: 注册成功
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-model_User'
         "400":
           description: 参数错误
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
         "500":
           description: 注册失败
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
       summary: 用户注册
       tags:
       - User
@@ -506,7 +561,7 @@ paths:
       - BearerAuth: []
       summary: 获取角色权限
       tags:
-      - 权限管理
+      - 角色API权限管理
   /role/{id}:
     get:
       consumes:
@@ -578,6 +633,25 @@ paths:
       summary: 删除 Role
       tags:
       - Role
+  /role/menu/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定角色的菜单
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 菜单列表
+          schema:
+            items:
+              type: integer
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 获取角色的菜单
+      tags:
+      - Role
   /role/page:
     get:
       consumes:
@@ -591,6 +665,41 @@ paths:
           schema:
             $ref: '#/definitions/crud.RolePageResponse'
       summary: 分页查询 Role
+      tags:
+      - Role
+  /role/permission-menu:
+    post:
+      consumes:
+      - application/json
+      description: 为角色添加菜单权限
+      parameters:
+      - description: 菜单权限信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/service.PermissionMenuRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 添加成功
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 添加菜单权限失败
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: 为角色添加菜单权限
       tags:
       - Role
   /role/update/:id:
@@ -638,18 +747,7 @@ paths:
         "200":
           description: 移除成功
           schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: 参数错误
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: 移除角色失败
-          schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
       security:
       - BearerAuth: []
       summary: 移除用户的角色
@@ -677,18 +775,7 @@ paths:
         "200":
           description: 分配成功
           schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: 参数错误
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: 分配角色失败
-          schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
       security:
       - BearerAuth: []
       summary: 分配角色给用户
@@ -720,18 +807,15 @@ paths:
         "200":
           description: 用户信息
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-model_User'
         "401":
           description: 未认证
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
         "500":
           description: 获取用户信息失败
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
       security:
       - BearerAuth: []
       summary: 获取当前用户信息
@@ -758,7 +842,7 @@ paths:
         "200":
           description: 用户分页
           schema:
-            $ref: '#/definitions/model.PageResult-model_User'
+            $ref: '#/definitions/controller.Response-model_PageResult-model_User'
       security:
       - BearerAuth: []
       summary: 分页
@@ -782,23 +866,7 @@ paths:
         "200":
           description: 修改成功
           schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: 参数错误
-          schema:
-            additionalProperties: true
-            type: object
-        "401":
-          description: 未认证
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: 修改密码失败
-          schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/controller.Response-any'
       security:
       - BearerAuth: []
       summary: 修改密码
@@ -821,7 +889,7 @@ paths:
         "200":
           description: 更新用户
           schema:
-            $ref: '#/definitions/model.PageResult-model_User'
+            $ref: '#/definitions/controller.Response-model_UserReq'
       security:
       - BearerAuth: []
       summary: 更新用户

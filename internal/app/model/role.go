@@ -17,9 +17,3 @@ type RoleReq struct {
 	DisplayName string `json:"display_name"`
 	Description string `json:"description"`
 }
-
-// RoleMenu 角色菜单关联表
-type RoleMenu struct {
-	RoleId  int `gorm:"primaryKey"`
-	MenuIds int
-}

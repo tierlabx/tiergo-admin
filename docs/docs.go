@@ -21,7 +21,6 @@ const docTemplate = `{
     "paths": {
         "/login": {
             "post": {
-                "description": "用户登录获取令牌",
                 "consumes": [
                     "application/json"
                 ],
@@ -47,22 +46,19 @@ const docTemplate = `{
                     "200": {
                         "description": "登录成功，返回token",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-controller_LoginResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     },
                     "401": {
                         "description": "登录失败",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     }
                 }
@@ -204,7 +200,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "权限管理"
+                    "角色API权限管理"
                 ],
                 "summary": "添加权限",
                 "parameters": [
@@ -256,7 +252,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "权限管理"
+                    "角色API权限管理"
                 ],
                 "summary": "移除权限",
                 "parameters": [
@@ -297,7 +293,6 @@ const docTemplate = `{
         },
         "/register": {
             "post": {
-                "description": "注册新用户",
                 "consumes": [
                     "application/json"
                 ],
@@ -323,22 +318,19 @@ const docTemplate = `{
                     "200": {
                         "description": "注册成功",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-model_User"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     },
                     "500": {
                         "description": "注册失败",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     }
                 }
@@ -359,7 +351,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "权限管理"
+                    "角色API权限管理"
                 ],
                 "summary": "获取角色权限",
                 "parameters": [
@@ -453,6 +445,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/role/menu/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "获取指定角色的菜单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "获取角色的菜单",
+                "responses": {
+                    "200": {
+                        "description": "菜单列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/role/page": {
             "get": {
                 "description": "分页查询 Role",
@@ -471,6 +494,60 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/crud.RolePageResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/role/permission-menu": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "为角色添加菜单权限",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "为角色添加菜单权限",
+                "parameters": [
+                    {
+                        "description": "菜单权限信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.PermissionMenuRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "添加成功",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "参数错误",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "添加菜单权限失败",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
@@ -607,22 +684,19 @@ const docTemplate = `{
                     "200": {
                         "description": "用户信息",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-model_User"
                         }
                     },
                     "401": {
                         "description": "未认证",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     },
                     "500": {
                         "description": "获取用户信息失败",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     }
                 }
@@ -665,7 +739,7 @@ const docTemplate = `{
                     "200": {
                         "description": "用户分页",
                         "schema": {
-                            "$ref": "#/definitions/model.PageResult-model_User"
+                            "$ref": "#/definitions/controller.Response-model_PageResult-model_User"
                         }
                     }
                 }
@@ -704,29 +778,7 @@ const docTemplate = `{
                     "200": {
                         "description": "修改成功",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "401": {
-                        "description": "未认证",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "修改密码失败",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     }
                 }
@@ -764,7 +816,7 @@ const docTemplate = `{
                     "200": {
                         "description": "更新用户",
                         "schema": {
-                            "$ref": "#/definitions/model.PageResult-model_User"
+                            "$ref": "#/definitions/controller.Response-model_UserReq"
                         }
                     }
                 }
@@ -810,22 +862,7 @@ const docTemplate = `{
                     "200": {
                         "description": "分配成功",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "分配角色失败",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     }
                 }
@@ -869,22 +906,7 @@ const docTemplate = `{
                     "200": {
                         "description": "移除成功",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "移除角色失败",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/controller.Response-any"
                         }
                     }
                 }
@@ -892,6 +914,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controller.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        },
         "controller.PasswordRequest": {
             "type": "object",
             "required": [
@@ -905,6 +938,74 @@ const docTemplate = `{
                     "minLength": 6
                 },
                 "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.Response-any": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.Response-controller_LoginResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/controller.LoginResponse"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.Response-model_PageResult-model_User": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/model.PageResult-model_User"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.Response-model_User": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.Response-model_UserReq": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/model.UserReq"
+                },
+                "message": {
                     "type": "string"
                 }
             }
@@ -1218,6 +1319,24 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "service.PermissionMenuRequest": {
+            "type": "object",
+            "required": [
+                "menu_ids",
+                "role_id"
+            ],
+            "properties": {
+                "menu_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "role_id": {
+                    "type": "integer"
                 }
             }
         },

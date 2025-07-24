@@ -40,3 +40,17 @@ func buildTreeMenu(menus []model.Menu, parentId *int) []model.Menu {
 	}
 	return tree
 }
+
+// 获取用户所有的菜单权限
+/* func (m *MenuService) GetUserPermissionMenuTree(userId uint) ([]model.Menu, error) {
+	// 获取用户的所有角色
+	var roles []model.Role
+	if err := m.DB.Model(&model.User{}).Where("id = ?", userId).Preload("Role").Find(&roles).Error; err != nil {
+		return nil, err
+	}
+	// 获取角色所有的菜单权限
+	for _, role := range roles {
+		permissions, err := m.GetPermissions(role.Name)
+	}
+
+} */

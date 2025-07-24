@@ -34,14 +34,13 @@ func NewUserController(userService *service.UserService) *UserController {
 
 // Register 用户注册
 // @Summary 用户注册
-// @Description 注册新用户
 // @Tags User
 // @Accept json
 // @Produce json
 // @Param data body service.RegisterRequest true "用户注册信息"
-// @Success 200 {object} map[string]interface{} "注册成功"
-// @Failure 400 {object} map[string]interface{} "参数错误"
-// @Failure 500 {object} map[string]interface{} "注册失败"
+// @Success 200 {object} Response[model.User] "注册成功"
+// @Failure 400 {object} Response[any] "参数错误"
+// @Failure 500 {object} Response[any] "注册失败"
 // @Router /register [post]
 func (c *UserController) Register(ctx *gin.Context) {
 	var req service.RegisterRequest
@@ -61,14 +60,13 @@ func (c *UserController) Register(ctx *gin.Context) {
 
 // Login 用户登录
 // @Summary 用户登录
-// @Description 用户登录获取令牌
 // @Tags User
 // @Accept json
 // @Produce json
 // @Param data body service.LoginRequest true "用户登录信息"
-// @Success 200 {object} map[string]interface{} "登录成功，返回token"
-// @Failure 400 {object} map[string]interface{} "参数错误"
-// @Failure 401 {object} map[string]interface{} "登录失败"
+// @Success 200 {object} Response[LoginResponse] "登录成功，返回token"
+// @Failure 400 {object} Response[any] "参数错误"
+// @Failure 401 {object} Response[any] "登录失败"
 // @Router /login [post]
 func (c *UserController) Login(ctx *gin.Context) {
 	var req service.LoginRequest
@@ -101,9 +99,9 @@ func (c *UserController) Login(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} map[string]interface{} "用户信息"
-// @Failure 401 {object} map[string]interface{} "未认证"
-// @Failure 500 {object} map[string]interface{} "获取用户信息失败"
+// @Success 200 {object} Response[model.User] "用户信息"
+// @Failure 401 {object} Response[any] "未认证"
+// @Failure 500 {object} Response[any] "获取用户信息失败"
 // @Router /user/info [get]
 func (c *UserController) GetUserInfo(ctx *gin.Context) {
 	userIDValue, exists := ctx.Get("userID")
@@ -130,10 +128,7 @@ func (c *UserController) GetUserInfo(ctx *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param data body PasswordRequest true "密码信息"
-// @Success 200 {object} map[string]interface{} "修改成功"
-// @Failure 400 {object} map[string]interface{} "参数错误"
-// @Failure 401 {object} map[string]interface{} "未认证"
-// @Failure 500 {object} map[string]interface{} "修改密码失败"
+// @Success 200 {object} Response[any] "修改成功"
 // @Router /user/password [put]
 func (c *UserController) ChangePassword(ctx *gin.Context) {
 	userIDValue, exists := ctx.Get("userID")
@@ -167,7 +162,7 @@ func (c *UserController) ChangePassword(ctx *gin.Context) {
 // @Security BearerAuth
 // @Param page path  int true "页码"
 // @Param limit path int true "当页条数"
-// @Success 200 {object} model.PageResult[model.User] "用户分页"
+// @Success 200 {object} Response[model.PageResult[model.User]] "用户分页"
 // @Router /user/page [get]
 func (c *UserController) Page(ctx *gin.Context) {
 	var req model.PageLimitReq
@@ -200,7 +195,7 @@ func (c *UserController) Page(ctx *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param data body model.UserReq true "修改参数"
-// @Success 200 {object} model.PageResult[model.User] "更新用户"
+// @Success 200 {object} Response[model.UserReq] "更新用户"
 // @Router /user/update/:id [post]
 func (c *UserController) Update(ctx *gin.Context) {
 	var dto model.UserReq
@@ -229,9 +224,7 @@ func (c *UserController) Update(ctx *gin.Context) {
 // @Security BearerAuth
 // @Param id path int true "用户ID"
 // @Param data body RoleRequest true "角色信息"
-// @Success 200 {object} map[string]interface{} "分配成功"
-// @Failure 400 {object} map[string]interface{} "参数错误"
-// @Failure 500 {object} map[string]interface{} "分配角色失败"
+// @Success 200 {object} Response[any] "分配成功"
 // @Router /user/{id}/role [post]
 func (c *UserController) AssignRole(ctx *gin.Context) {
 	userID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
@@ -242,16 +235,16 @@ func (c *UserController) AssignRole(ctx *gin.Context) {
 
 	var req RoleRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "参数错误: " + err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "参数错误: " + err.Error(), "data": true})
 		return
 	}
 
 	if err := c.UserService.AssignRoleToUser(uint64(userID), req.RoleID); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "分配角色失败: " + err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "分配角色失败: " + err.Error(), "data": true})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "分配角色成功"})
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "分配角色成功", "data": true})
 }
 
 // RemoveRole 移除角色
@@ -263,9 +256,7 @@ func (c *UserController) AssignRole(ctx *gin.Context) {
 // @Security BearerAuth
 // @Param id path int true "用户ID"
 // @Param data body RoleRequest true "角色信息"
-// @Success 200 {object} map[string]interface{} "移除成功"
-// @Failure 400 {object} map[string]interface{} "参数错误"
-// @Failure 500 {object} map[string]interface{} "移除角色失败"
+// @Success 200 {object} Response[any] "移除成功"
 // @Router /user/{id}/role [delete]
 func (c *UserController) RemoveRole(ctx *gin.Context) {
 	userID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)

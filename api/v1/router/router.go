@@ -58,6 +58,9 @@ func SetupDigRouter(r *gin.Engine, c *dig.Container) error {
 				// 角色管理
 				crud.RegisterCrudRoutes[model.Role, model.RoleReq](rbacGroup, db)
 				rbacGroup.GET("/role/:id", roleController.GetRoleByID)
+				rbacGroup.POST("/role/permission-menu", roleController.AddPermissionMenu)
+				rbacGroup.GET("/role/menu/:id", roleController.GetRoleMenu)
+
 				// api权限管理
 				rbacGroup.POST("/permission", roleController.AddPermission)
 				rbacGroup.DELETE("/permission", roleController.RemovePermission)
