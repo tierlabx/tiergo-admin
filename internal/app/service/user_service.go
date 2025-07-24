@@ -148,7 +148,7 @@ func (s *UserService) Page(req model.PageLimitReq) (*model.PageResult[model.User
 }
 
 // 更新用户
-func (s *UserService) UpdateFromDTO(id uint64, req *model.UserReq) error {
+func (s *UserService) UpdateFromDTO(id int, req *model.UserReq) error {
 	// 查询原始数据（为了不覆盖空字段）
 	var user model.User
 	if err := s.DB.First(&user, id).Error; err != nil {
@@ -184,7 +184,7 @@ func (s *UserService) UpdateFromDTO(id uint64, req *model.UserReq) error {
 }
 
 // GetUserByID 通过ID获取用户信息
-func (s *UserService) GetUserByID(id uint64) (*model.User, error) {
+func (s *UserService) GetUserByID(id int) (*model.User, error) {
 	var user model.User
 	if err := s.DB.Preload("Roles").First(&user, id).Error; err != nil {
 		return nil, err
@@ -193,7 +193,7 @@ func (s *UserService) GetUserByID(id uint64) (*model.User, error) {
 }
 
 // ChangePassword 修改密码
-func (s *UserService) ChangePassword(userID uint64, oldPassword, newPassword string) error {
+func (s *UserService) ChangePassword(userID int, oldPassword, newPassword string) error {
 	var user model.User
 	if err := s.DB.First(&user, userID).Error; err != nil {
 		return err
@@ -243,8 +243,7 @@ func (s *UserService) AssignRoleToUser(userID int, roleIDS []int) error {
 }
 
 // 获取用户所有角色
-// @Params 用户ID
-func (s *UserService) GetUserRole(id uint64) ([]model.Role, error) {
+func (s *UserService) GetUserRole(id int) ([]model.Role, error) {
 	var roles []model.Role
 	if err := s.DB.Model(&model.User{}).Where("id = ?", id).Preload("Role").Find(&roles).Error; err != nil {
 		return nil, err

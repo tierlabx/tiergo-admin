@@ -68,6 +68,7 @@ func SetupDigRouter(r *gin.Engine, c *dig.Container) error {
 				// 菜单管理
 				crud.RegisterCrudRoutes[model.Menu, model.MenuReq](rbacGroup, db)
 				rbacGroup.GET("/menu/tree", menuController.GetMenuTree)
+				rbacGroup.GET("/menu/user-permission-tree", menuController.GetUserPermissionMenuTree)
 			}
 		}
 	})

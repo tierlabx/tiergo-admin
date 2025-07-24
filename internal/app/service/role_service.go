@@ -76,8 +76,8 @@ func (s *RoleService) AddPermissionMenu(roleId int, menuIds []int) error {
 	return nil
 }
 
-// 获取角色的菜单
-func (s *RoleService) GetRoleMenu(roleId int) ([]int, error) {
+// 获取角色的菜单ids
+func (s *RoleService) GetRoleMenuIds(roleId int) ([]int, error) {
 	var role model.Role
 	if err := s.DB.First(&role, roleId).Error; err != nil {
 		return nil, err
@@ -91,4 +91,18 @@ func (s *RoleService) GetRoleMenu(roleId int) ([]int, error) {
 		menuIds = append(menuIds, menu.ID)
 	}
 	return menuIds, nil
+}
+
+// 获取角色的菜单
+func (s *RoleService) GetRoleMenu(roleId int) ([]model.Menu, error) {
+	var role model.Role
+	if err := s.DB.First(&role, roleId).Error; err != nil {
+		return nil, err
+	}
+	var menus []model.Menu
+	if err := s.DB.Model(&role).Association("Menu").Find(&menus); err != nil {
+		return nil, err
+	}
+
+	return menus, nil
 }

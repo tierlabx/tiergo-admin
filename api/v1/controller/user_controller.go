@@ -110,7 +110,7 @@ func (c *UserController) GetUserInfo(ctx *gin.Context) {
 		return
 	}
 
-	userID := userIDValue.(uint64)
+	userID := userIDValue.(int)
 	user, err := c.UserService.GetUserByID(userID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "获取用户信息失败: " + err.Error()})
@@ -137,7 +137,7 @@ func (c *UserController) ChangePassword(ctx *gin.Context) {
 		return
 	}
 
-	userID := userIDValue.(uint64)
+	userID := userIDValue.(int)
 
 	var req PasswordRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -208,7 +208,7 @@ func (c *UserController) Update(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "参数错误: " + err.Error()})
 		return
 	}
-	if err := c.UserService.UpdateFromDTO(id, &dto); err != nil {
+	if err := c.UserService.UpdateFromDTO(int(id), &dto); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "更新失败: " + err.Error()})
 		return
 	}

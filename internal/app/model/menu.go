@@ -30,3 +30,7 @@ type MenuReq struct {
 	Sort      *int   `json:"sort"`
 	ParentId  *int   `json:"parent_id" `
 }
+
+func (m Menu) GetID() int {
+	return m.ID
+}
