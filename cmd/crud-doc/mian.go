@@ -47,7 +47,7 @@ func main() {
 	// write("import \"github.com/gin-gonic/gin\"")
 	// write("import \"tier-up/internal/app/model\"")
 	write("import (")
-	write(`  "github.com/gin-gonic/gin"`)
+	write(`"github.com/gin-gonic/gin"`)
 	write(`"tier-up/internal/app/model"`)
 	write(")")
 	for _, m := range models {
