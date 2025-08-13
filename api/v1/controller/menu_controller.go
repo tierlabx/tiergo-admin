@@ -25,7 +25,7 @@ func NewMenuController(menuService *service.MenuService) *MenuController {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} []model.Menu "菜单详情"
+// @Success 200 {object} Response[[]model.Menu] "菜单详情"
 // @Router /menu/tree [get]
 func (m *MenuController) GetMenuTree(ctx *gin.Context) {
 	tree, err := m.MenuService.Tree()
@@ -42,7 +42,7 @@ func (m *MenuController) GetMenuTree(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} []model.Menu "用户权限菜单树"
+// @Success 200 {object} Response[[]model.Menu] "用户权限菜单树"
 // @Router /menu/user-permission-tree [get]
 func (m *MenuController) GetUserPermissionMenuTree(ctx *gin.Context) {
 	// 从上下文中获取用户ID和用户名

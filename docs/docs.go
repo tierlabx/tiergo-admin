@@ -206,10 +206,7 @@ const docTemplate = `{
                     "200": {
                         "description": "用户权限菜单树",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Menu"
-                            }
+                            "$ref": "#/definitions/controller.Response-array_model_Menu"
                         }
                     }
                 }
@@ -935,6 +932,23 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.Response-array_model_Menu": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Menu"
+                    }
+                },
                 "message": {
                     "type": "string"
                 }

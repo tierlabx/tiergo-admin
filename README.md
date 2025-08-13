@@ -24,3 +24,9 @@ workflow：工作流程改进
 types：类型定义文件更改
 release：新版发布
 ```
+
+# docker-compose 
+
+```
+docker-compose build 
+```

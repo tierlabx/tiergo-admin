@@ -141,7 +141,7 @@ func (c *RoleController) GetPermissions(ctx *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param data body service.PermissionMenuRequest true "菜单权限信息"
-// @Success 200 {object} map[string]interface{} "添加成功"
+// @Success 200 {object} Response[nil] "添加成功"
 // @Failure 400 {object} map[string]interface{} "参数错误"
 // @Failure 500 {object} map[string]interface{} "添加菜单权限失败"
 // @Router /role/permission-menu [post]
