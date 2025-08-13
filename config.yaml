@@ -8,5 +8,5 @@ DB:
   Password: ""  # 使用环境变量占位 
   Charset: "utf8mb4"
 WebApi:
-  Host: "127.0.0.1"
+  Host: "0.0.0.0"
   Port: "88"

@@ -4,7 +4,7 @@ import "tier-up/internal/app/model"
 
 // 递归构建树 // 指针允许null
 func BuildTreeMenu(menus []model.Menu, parentId *int) []model.Menu {
-	var tree []model.Menu
+	var tree []*model.Menu
 	for _, m := range menus {
 		if (m.ParentId == nil && parentId == nil) || (m.ParentId != nil && parentId != nil && *m.ParentId == *parentId) {
 			children := BuildTreeMenu(menus, &m.ID)

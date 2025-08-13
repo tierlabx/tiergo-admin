@@ -1,0 +1,16 @@
+#.air.toml
+
+
+# 监听目录
+root = "."
+
+# 要忽略的目录或文件
+[ignore]
+files = ["vendor","tmp","logs"]
+
+
+#运行的命令 ,go run main.go 或go build + 二进制文件
+[build]
+cmd = "go build -o ./tmp/main ."
+bin ="./tmp/main"
+delaty = 1000

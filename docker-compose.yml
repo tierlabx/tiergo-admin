@@ -1,0 +1,11 @@
+version:"3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:88"
+    volumes:
+      - ./:/app
+      - /app/tmp
+    command: air -c .air.toml
