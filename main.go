@@ -50,8 +50,9 @@ func main() {
 	router.SetupDigRouter(r, container)
 
 	// 6. 启动服务器
-	addr := fmt.Sprintf(":%s", cfg.WebApi.Port)
-	fmt.Println("Swagger文档地址: localhost:8081/api/v1/swagger/index.html")
+	addr := fmt.Sprintf("%s:%s", cfg.WebApi.Host, cfg.WebApi.Port)
+	fmt.Printf("服务器启动在 %s\n", addr)
+	fmt.Println("Swagger文档地址: http://localhost:8081/api/v1/swagger/index.html")
 	if err := r.Run(addr); err != nil {
 		fmt.Printf("启动服务器失败: %v\n", err)
 	}
