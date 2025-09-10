@@ -18,13 +18,13 @@ type Hello struct {
 * 3. req和res的类型不能是： channel（通道），func(函数) 均不能进行序列化
  */
 func (h Hello) SayHello(req string, res *string) error {
-	*res = "Hello, " + req
+	*res = "Hello11, " + req
 	return nil
 }
 
 func main() {
 	// 1. 注册服务
-	err1 := rpc.RegisterName("hello", new(Hello))
+	err1 := rpc.RegisterName("Hello", new(Hello))
 	if err1 != nil {
 		fmt.Println("注册服务失败:", err1)
 	}
@@ -37,10 +37,12 @@ func main() {
 	defer listener.Close()
 
 	for {
+		fmt.Println("监听端口成功")
 		conn, err3 := listener.Accept()
 		if err3 != nil {
 			fmt.Print(err3)
 		}
+		// 绑定
 		rpc.ServeConn(conn)
 	}
 
