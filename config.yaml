@@ -5,7 +5,7 @@ DB:
   Host: "118.178.180.247"
   Port: "5432"
   User: "tierup"
-  Password: ""  # 使用环境变量占位 
+  Password: "" # 使用环境变量占位
   Charset: "utf8mb4"
 WebApi:
   Host: "0.0.0.0"

@@ -1,7 +1,13 @@
+version: "3.8"
 services:
   app:
     build: .
+    container_name: tier_go
     ports:
       - "8081:88"
     volumes:
-      - ./:/app
+      - .:/app # 本地代码挂载到容器
+    working_dir: /app
+    command: air -c main.go
+    env_file:
+      - .env
