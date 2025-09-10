@@ -11,7 +11,7 @@ files = ["vendor","tmp","logs",".git",".vscode"]
 
 #运行的命令 ,go run main.go 或go build + 二进制文件
 [build]
-cmd = "go build -o ./tmp/main ."
+cmd = "go build -o ./tmp/main ./cmd/base"
 bin ="./tmp/main"
 delay  = 1000
 
