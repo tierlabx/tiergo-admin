@@ -1,11 +1,8 @@
-
-
 ## swagger 生成
 
-```swag init --parseDependency --output docs```
+`swag init --parseDependency --output docs`
 
-
-## Git规范
+## Git 规范
 
 ```
 feat:新功能（feature）
@@ -25,8 +22,20 @@ types：类型定义文件更改
 release：新版发布
 ```
 
-# docker-compose 
+# docker-compose
 
 ```
-docker-compose build 
+docker-compose build
 ```
+
+# 在 docker 中开发
+
+```
+docker-compose up
+```
+
+# 安装 protobuf
+
+`go get -u github.com/golang/protobuf/protoc-gen-go`
+
+protoc-gen-go 将自动安装到 $GOPATH/bin 目录下，也需要将这个目录加入到环境变量中。
