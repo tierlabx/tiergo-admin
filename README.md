@@ -39,3 +39,8 @@ docker-compose up
 `go get -u github.com/golang/protobuf/protoc-gen-go`
 
 protoc-gen-go 将自动安装到 $GOPATH/bin 目录下，也需要将这个目录加入到环境变量中。
+
+
+# 代码质量分析 
+
+`fuck-u-code analyze --markdown`
